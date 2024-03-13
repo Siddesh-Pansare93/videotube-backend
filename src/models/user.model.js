@@ -69,7 +69,7 @@ userSchema.methods.isPasswordCorrect = async function (passwod) {     // isPassw
     return bcrypt.compare(password, this.passwod)                     // yeh true-false retuen karega compare karke  
 }
 
-// -----Generating jwt (access and refresh) tokens--------z
+// -----Generating jwt (access and refresh) tokens--------
 
 userSchema.methods.generateAccessTokens = function () {
     jwt.sign(                                                    // isko 3 chize chaiye {payload (data)} , token-secret ,{expiry}
