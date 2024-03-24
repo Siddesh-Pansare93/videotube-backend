@@ -8,7 +8,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 
 const registerUser = asyncHandler( async(req , res) =>{
-    const {username , fullname  , email , password}  = req.body 
+    const {username , fullName  , email , password}  = req.body 
     console.log(email)
 
     if (
@@ -17,7 +17,7 @@ const registerUser = asyncHandler( async(req , res) =>{
         throw new ApiError(400 , "All fields are required")
     }
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or : [{username} , {email}]
     })
     console.log(existedUser) ;
@@ -26,7 +26,12 @@ const registerUser = asyncHandler( async(req , res) =>{
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path ;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path ; 
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path ; 
+
+    let coverImageLocalPath ; 
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath  = req.files.coverImage[0].path ;
+    }
 
     if (!avatarLocalPath) {
         throw new ApiError(400 , "Avatar file is required") ; 
@@ -39,16 +44,20 @@ const registerUser = asyncHandler( async(req , res) =>{
         throw new ApiError(400 , "Avatar file is required") ; 
     }
 
-    await User.create({
-        fullname , 
+    const user = await User.create({
+        fullName , 
         email , 
         avatar  : avatar.url , 
-        coverImage : coverImage.url , 
+        coverImage : coverImage?.url || "" , 
         password , 
-        username : username.toLowercase()
+        username : username.toLowerCase()
     })
 
-    const createdUser = await User.findById(User._id).select("-password -refreshToken")
+    const createdUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+    )
+    console.log(createdUser)
+
     if (!createdUser) {
         throw new ApiError(500 , "Something went Wrong While registering user")
     }
