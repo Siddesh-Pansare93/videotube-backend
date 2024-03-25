@@ -63,15 +63,17 @@ userSchema.pre("save", async function (next) {
 
 
 
-userSchema.methods.isPasswordCorrect = async function (passwod) {     // isPasswordCorrect yeh humnne banya hua method hai
+userSchema.methods.isPasswordCorrect = async function (password) {     // isPasswordCorrect yeh humnne banya hua method hai
                                                                       //  methods userSchema ek object hai jiske undar hum alag alag methods inject kar sakte hai
-    return bcrypt.compare(password, this.passwod)                     // yeh true-false retuen karega compare karke  
+    return await bcrypt.compare(password, this.password)                     // yeh true-false retuen karega compare karke  
 }
+
+
 
 // -----Generating jwt (access and refresh) tokens--------
 
-userSchema.methods.generateAccessTokens = function () {
-    jwt.sign(                                                    // isko 3 chize chaiye {payload (data)} , token-secret ,{expiry}
+userSchema.methods.generateAccessToken = function () {
+    return jwt.sign(                                                    // isko 3 chize chaiye {payload (data)} , token-secret ,{expiry}
         {
             _id: this.id,
             username: this.username,
@@ -86,7 +88,7 @@ userSchema.methods.generateAccessTokens = function () {
 }
 
 userSchema.methods.generateRefreshToken = function () {
-    jwt.sign(                                                    // access token ki tarah hi generate hoga bas isme payload (data) kam rehta hai
+     return jwt.sign(                                                    // access token ki tarah hi generate hoga bas isme payload (data) kam rehta hai
         {
             _id: this.id,
 
