@@ -55,7 +55,7 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();                                                   //passwod modify hua hai ki nhi check karne ke liye 
+    if (!this.isModified("password")) return next();     //passwod modify hua hai ki nhi check karne ke liye 
    
     this.password = await bcrypt.hash(this.password, 10)
     next()
