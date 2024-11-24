@@ -434,7 +434,7 @@ const getChannelUserProfile = asyncHandler(async (req , res )=>{
 
 
 const getUserWatchHistory  = asyncHandler(async(req , res)=>{
-    const user = await User.aggregate([
+    const userWatchHistory = await User.aggregate([
         {
             $match : {
                 _id : new mongoose.Types.ObjectId(req.user?._id)
@@ -467,6 +467,17 @@ const getUserWatchHistory  = asyncHandler(async(req , res)=>{
             }
         }
     ])
+
+    if(!userWatchHistory){
+        throw new ApiError ("404" , "Failed to fetch User watch History")
+    }
+
+    res.
+    status(200)
+    .json(
+        new ApiResponse(200 , userWatchHistory , "User watch history fetched Successfully")
+    )
+    
 })
 
 
@@ -480,6 +491,7 @@ export {
     updateAccountDetails ,
     updateAvatar ,
     updateCoverImage ,
-    getChannelUserProfile
+    getChannelUserProfile,
+    getUserWatchHistory
     
 }
