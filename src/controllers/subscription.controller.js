@@ -50,20 +50,39 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
         const subscribers = await Subscription.aggregate([
             {
-                $match: { channel: channelId }
+                $match: { channel: new mongoose.Types.ObjectId(channelId) }
             },
             {
                 $lookup: {
                     from: "users",
                     localField: "subscriber",
                     foreignField: "_id",
-                    as: "subscribers"
+                    as: "subscribers",
+                    pipeline :[
+                        {
+                            $project : {
+                                username : 1 ,
+                                avatar : 1 ,  
+                                _id : 0 
+
+                            }
+                        }
+                    ]
                 }
-            }, {
+            },
+            {
+                $addFields : {
+                    "subscribersList" : {
+                        $first : "$subscribers"
+                    }
+                }
+            },  
+            {
                 $project: {
-                    username: 1
+                    subscribersList :1 , 
+                    _id : 0 
                 }
-            }
+            } ,
         ])
 
         console.log(subscribers)
@@ -71,8 +90,10 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
             res.status(400).json("Not able to find any subscriber")
         }
 
+        const subscribersList = subscribers.map(item => item.subscribersList)
+
         res.status(200).json(
-            new ApiResponse(200 , subscribers, "user channel subscribers fetched Successfully")
+            new ApiResponse(200 , subscribersList, "user channel subscribers fetched Successfully")
         )
     } catch (error) {
         throw new ApiError(400, "Failed to get subscribers")
@@ -99,21 +120,18 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
                         {
                             $project: {
                                 username: 1 , 
-                                email : 1 ,
+                                // email : 1 ,
                                 avatar : 1 , 
                                 _id : 0
     
                             }
                         } ,
-                        // {
-                        //     $unwind : "$subscribedChannels"
-                        // }
                     ]
                 },
             },
             {
                 $addFields : {
-                    "channel" : ["$subscribedChannels.username" , "$subscribedChannels.avatar"]
+                    "channel" : {$first : "$subscribedChannels"}  
                 }
             },
             {
@@ -125,11 +143,16 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
            
            
         ])
+
+        // res.send(subscribedChannels)
     
         if(!subscribedChannels){
             throw new ApiError(400 , "Failed to find Subscribed Channels")
         }
-        const channelList = subscribedChannels.map(item => [item.channel[0][0] , item.channel[1][0]])
+        const channelList = subscribedChannels.map(item => item.channel)
+
+
+
         res
         .status(200)
         .json(
