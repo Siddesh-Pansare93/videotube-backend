@@ -19,12 +19,13 @@ app.use(cookieParser())
 // import router 
 
 import userRouter from "./routes/user.routes.js"
+import subscriptionRouter from "./routes/subscription.routes.js"
 
 
 
 //declare routes
 
 app.use("/api/v1/users" , userRouter)
-
+app.use("/api/v1/subscription" , subscriptionRouter)
 
 export { app }
