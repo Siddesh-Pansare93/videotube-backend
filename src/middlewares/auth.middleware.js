@@ -14,14 +14,14 @@ export const verifyJWT = asyncHandler(async(req ,res , next )=>{
         }
     
         const decodedToken = jwt.verify(token , process.env.ACCESS_TOKEN_SECRET)
-        console.log("decodedToken is " , decodedToken);
+        // console.log("decodedToken is " , decodedToken);
 
         if (!decodedToken) {
             throw new ApiError (400 , "Unauthorized Request")
         }
     
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
-        console.log(user);
+        // console.log(user);
     
         if (!user) {
             throw new ApiError(401 , "Invalid Access Tokens")

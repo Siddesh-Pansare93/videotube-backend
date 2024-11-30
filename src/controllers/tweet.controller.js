@@ -117,7 +117,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
         }
 
     } catch (error) {
-        
+        throw new ApiError(400 , "Failed to delete ! please try again")
     }
 
 })

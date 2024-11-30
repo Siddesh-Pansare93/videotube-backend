@@ -106,7 +106,7 @@ const registerUser = asyncHandler( async(req , res) =>{
 const loginUser = asyncHandler(async (req ,res) =>{
 
     const { username , email , password } = req.body
-    console.log(req)
+    
 
     if(!(username || email)){
         throw new ApiError (400 , "Username or email required")
@@ -118,7 +118,7 @@ const loginUser = asyncHandler(async (req ,res) =>{
          $or : [{email} , {username}] 
         }   
      )
-     console.log(user);
+     
 
      if (!user) {
         throw new ApiError(401 , "User does not exist")
