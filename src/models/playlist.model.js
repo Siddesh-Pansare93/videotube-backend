@@ -7,7 +7,8 @@ const playlistSchema = mongoose.Schema({
     },
     description: {
         type: String,
-        required: true
+        required: true,
+        default : "This is my playlist"
     },
 
     Videos: [{
