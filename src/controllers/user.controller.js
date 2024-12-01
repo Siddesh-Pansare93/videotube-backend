@@ -18,8 +18,8 @@ import mongoose from "mongoose";
        const accessToken = user.generateAccessToken()
        const refreshToken = user.generateRefreshToken()
 
-       console.log(accessToken)
-       console.log(refreshToken)
+    //    console.log(accessToken)
+    //    console.log(refreshToken)
 
        user.refreshToken = refreshToken
        await user.save({validateBeforeSave : false})
