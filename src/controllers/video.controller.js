@@ -162,39 +162,41 @@ const updateVideo = asyncHandler(async (req, res) => {
   } catch (error) {
     throw new ApiError(400 , `Faield to Update Video Details due to ${error.message} : Please Try again after sometime`)
   }
-
-
 })
 
 const deleteVideo = asyncHandler(async (req, res) => {
-    const { videoId } = req.params
-    const owner = req.user._id
-    //TODO: delete video
-
-    if (!isValidObjectId) {
-        throw new ApiError(404, "Video Does not Find")
-    }
-
-    const deletedVideo = await Video.findOneAndDelete(
-        {
-            _id: videoId,
-            owner
+    try {
+        const { videoId } = req.params
+        const owner = req.user._id
+        //TODO: delete video
+    
+        if (!isValidObjectId) {
+            throw new ApiError(404, "Video Does not Find")
         }
-    )
-
-    if (!deletedVideo) {
-        throw new ApiError(400, "Failed to delete Event")
-    }
-
-    res
-        .status(200)
-        .json(
-            new ApiResponse(200, deleteVideo, "video deleted successfully")
+    
+        const deletedVideo = await Video.findOneAndDelete(
+            {
+                _id: videoId,
+                owner
+            }
         )
+    
+        if (!deletedVideo) {
+            throw new ApiError(400, "Failed to delete Event")
+        }
+    
+        res
+            .status(200)
+            .json(
+                new ApiResponse(200, deleteVideo, "video deleted successfully")
+            )
+    } catch (error) {
+        throw new ApiError(400 , "Failed to delete Video")
+    }
 })
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
-    // try {
+    try {
     const { videoId } = req.params
     const owner = req.user._id
 
@@ -221,9 +223,9 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(200, updatedVideo, "Toggled Publish status successfully")
         )
-    // } catch (error) {
-    //     throw new ApiError(400 , "Failed To toggle Publish Status")
-    // }
+    } catch (error) {
+        throw new ApiError(400 , "Failed To toggle Publish Status")
+    }
 })
 
 export {
