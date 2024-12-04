@@ -95,7 +95,10 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
                                 videoFile: 1,
                                 thumbnail: 1,
                                 title: 1,
-                                ownerUsername: 1
+                                ownerUsername: 1,
+                                isPublished : 1 ,
+                                duration :1 , 
+                                views : 1
                             }
                         }
                     ]
@@ -151,9 +154,44 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 })
 
 const getPlaylistById = asyncHandler(async (req, res) => {
-    const { playlistId } = req.params
-    console.log(userId)
-    //TODO: get playlist by id
+    try {
+        const { playlistId } = req.params
+
+        if(!isValidObjectId){
+            throw new ApiError(400 , "Playlist does not exist with this id")
+        }
+
+        const playlist = await Playlist.findById(playlistId)
+                                        .populate({
+                                            path : "Videos" , 
+                                            populate : {
+                                                path : "owner",
+                                                select : "username -_id"
+                                            },
+                                            select : "-_id -__v"
+                                        })
+                                        .populate({
+                                            path : "owner" ,
+                                            select : "username -_id"
+                                        })
+                                        .select(" -_id -__v")
+
+        
+
+        if(!playlist){
+            throw new ApiError(400 , "Playlist not found")
+        }
+
+        res
+        .status(400)
+        .json(
+            new ApiResponse(200 , playlist , "Playlist found Successfully")
+        )
+        
+    } catch (error) {
+        throw new ApiError(400 , `Failed to get Playlist due to ${error} ` )
+    }
+    
 })
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
