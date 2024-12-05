@@ -5,7 +5,7 @@ const likeSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comment'
     } , 
-    Video :  {
+    video :  {
         type: mongoose.Schema.Types.ObjectId,
         ref : 'Video'
     },
