@@ -28,19 +28,21 @@ const toggleSubscription = asyncHandler(async (req, res) => {
         res.status(200).json(
             new ApiResponse({ subscribed: false }, "Subscription cancelled successfully")
         )
+    }else{
+        const subscribtion = await Subscription.create({
+            subscriber: userId,
+            channel: channelId
+        })
+    
+        if (!subscribtion) {
+            throw new ApiError(400, "Failed to subscribe")
+        }
+        res.status(200).json(
+            new ApiResponse(200, { subscribed: true }, "Subscription toggled successfully")
+        )
     }
 
-    const subscribtion = await Subscription.create({
-        subscriber: userId,
-        channel: channelId
-    })
-
-    if (!subscribtion) {
-        throw new ApiError(400, "Failed to subscribe")
-    }
-    res.status(200).json(
-        new ApiResponse(200, { subscribed: true }, "Subscription toggled successfully")
-    )
+    
 })
 
 // controller to return subscriber list of a channel
