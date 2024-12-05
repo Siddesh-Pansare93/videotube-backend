@@ -51,7 +51,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
                 owner: userId
             })
     
-        if (userTweets.length == 0) {
+        if (userTweets.length === 0) {
             throw new ApiError(404, "No tweets found")
         }
     

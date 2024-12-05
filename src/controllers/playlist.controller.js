@@ -136,7 +136,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
             }
         ])
 
-        if (!userPlaylists) {
+        if (!userPlaylists?.length) {
             throw new ApiError(400, "User Playlist not Found")
         }
 
