@@ -8,55 +8,93 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 
 const getChannelStats = asyncHandler(async (req, res) => {
-    // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc.
-    // try {
+    try {
 
-        // TOTAL SUBSCRIBERS : 
-        // const channelId =  "674dc2d781ec5e7b205b8f26"
-        const channelId =  req.user._id
+    const channelId = req.user._id
 
-        // const subscriberCount = await Subscription.find({channel : channelId})
-        // const totalSubscribers = subscriberCount?.length ? subscriberCount.length : 0
+    // TOTAL SUBSCRIBERS : 
 
-        // alternate approach
-        const subscriberCount = await Subscription.aggregate([
-            {
-                $match : {
-                    channel : new mongoose.Types.ObjectId(channelId)
-                }
-            },
-            {
-                $count: "subscribers"
+    // const subscriberCount = await Subscription.find({channel : channelId})
+    // const totalSubscribers = subscriberCount?.length ? subscriberCount.length : 0
+
+    // alternate approach
+    const subscriberCount = await Subscription.aggregate([
+        {
+            $match: {
+                channel: new mongoose.Types.ObjectId(channelId)
             }
-        ])
-       const totalSubscribers =  subscriberCount?.length ? subscriberCount[0].subscribers : 0 
-       
-       
-        // TOTAL VIDEOS
+        },
+        {
+            $count: "subscribers"
+        }
+    ])
+    const totalSubscribers = subscriberCount?.length ? subscriberCount[0].subscribers : 0
 
-        const videosCount = await Video.find({owner : channelId})
 
-        const totalVideos = videosCount?.length ? videosCount.length : 0
+    // TOTAL VIDEOS :
 
-        //TOTAL LIKES 
+    const videosCount = await Video.find({ owner: channelId })
 
-        console.log(channelId)
-        const  likesCount = await Like.aggregate([
-            {
-                $match : {
-                    video : {
-                        $in : await Video.find({owner : new mongoose.Types.ObjectId(channelId)}).distinct('_id')
-                    }
+    const totalVideos = videosCount?.length ? videosCount.length : 0
+
+
+    //TOTAL LIKES : 
+
+    console.log(channelId)
+    const likesCount = await Like.aggregate([
+        {
+            $match: {
+                video: {
+                    $in: await Video.find({ owner: new mongoose.Types.ObjectId(channelId) }).distinct('_id')
                 }
             }
-        ])
+        },
+        {
+            $count: "likes"
+        }
+    ])
 
-        res.send(likesCount)
+    const totalLikes = likesCount?.length ? likesCount[0].likes : 0
 
-        
-    // } catch (error) {
-    //     throw new ApiError(400, `Failed to get channel Stats due to ${error.message}`)
-    // }
+
+    //TOTAL VIEWS : 
+
+    const viewsCount = await Video.aggregate([
+        {
+            $match : {
+                owner : channelId
+            }
+        },
+        {
+            $group :{
+                _id : null , 
+                views : { $sum : "$views"}
+            }
+        },
+        {
+            $project : {
+                _id : 0 
+            }
+        }
+    ])
+
+    const totalViews = viewsCount?.length ?  viewsCount[0].views : 0
+
+    const channelStats = {
+        totalLikes,
+        totalSubscribers ,
+        totalVideos,
+        totalViews
+    }
+
+    res
+    .status(200)
+    .json(
+        new ApiResponse(200 , channelStats , "Successfully fetched channel stats" )
+    )
+    } catch (error) {
+        throw new ApiError(400, `Failed to get channel Stats due to ${error.message}`)
+    }
 })
 
 const getChannelVideos = asyncHandler(async (req, res) => {
