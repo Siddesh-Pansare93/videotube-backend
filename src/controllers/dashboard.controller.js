@@ -1,21 +1,95 @@
 
-import mongoose from "mongoose"
-import {Video} from "../models/video.model.js"
-import {Subscription} from "../models/subscription.model.js"
-import {Like} from "../models/like.model.js"
-import {ApiError} from "../utils/ApiError.js"
-import {ApiResponse} from "../utils/ApiResponse.js"
-import {asyncHandler} from "../utils/asyncHandler.js"
+import mongoose, { isValidObjectId } from "mongoose"
+import { Video } from "../models/video.model.js"
+import { Subscription } from "../models/subscription.model.js"
+import { Like } from "../models/like.model.js"
+import { ApiError } from "../utils/ApiError.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
+import { asyncHandler } from "../utils/asyncHandler.js"
 
 const getChannelStats = asyncHandler(async (req, res) => {
     // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc.
+    // try {
+
+        // TOTAL SUBSCRIBERS : 
+        // const channelId =  "674dc2d781ec5e7b205b8f26"
+        const channelId =  req.user._id
+
+        // const subscriberCount = await Subscription.find({channel : channelId})
+        // const totalSubscribers = subscriberCount?.length ? subscriberCount.length : 0
+
+        // alternate approach
+        const subscriberCount = await Subscription.aggregate([
+            {
+                $match : {
+                    channel : new mongoose.Types.ObjectId(channelId)
+                }
+            },
+            {
+                $count: "subscribers"
+            }
+        ])
+       const totalSubscribers =  subscriberCount?.length ? subscriberCount[0].subscribers : 0 
+       
+       
+        // TOTAL VIDEOS
+
+        const videosCount = await Video.find({owner : channelId})
+
+        const totalVideos = videosCount?.length ? videosCount.length : 0
+
+        //TOTAL LIKES 
+
+        console.log(channelId)
+        const  likesCount = await Like.aggregate([
+            {
+                $match : {
+                    video : {
+                        $in : await Video.find({owner : new mongoose.Types.ObjectId(channelId)}).distinct('_id')
+                    }
+                }
+            }
+        ])
+
+        res.send(likesCount)
+
+        
+    // } catch (error) {
+    //     throw new ApiError(400, `Failed to get channel Stats due to ${error.message}`)
+    // }
 })
 
 const getChannelVideos = asyncHandler(async (req, res) => {
     // TODO: Get all the videos uploaded by the channel
+    try {
+        const channelId = req.user._id
+
+        if (!isValidObjectId(channelId)) {
+            throw new ApiError(400, "Channel does not exist")
+        }
+
+        const channelVideos = await Video.find(
+            {
+                owner: channelId
+            }
+        ).populate({ path: "owner", select: "username" })
+
+        if (!channelVideos?.length) {
+            throw new ApiError(400, "No Videos Found for this channel")
+        }
+
+        res
+            .status(200)
+            .json(
+                new ApiResponse(200, channelVideos, "Successfully found ChannelVideos")
+            )
+    } catch (error) {
+        throw new ApiError(400, `Failed to get channel Videos due to ${error.message}`)
+
+    }
 })
 
 export {
-    getChannelStats, 
+    getChannelStats,
     getChannelVideos
-    }
+}
