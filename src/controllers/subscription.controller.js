@@ -8,38 +8,42 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 
 
 const toggleSubscription = asyncHandler(async (req, res) => {
-    const { channelId } = req.params
-    console.log(channelId)
-    // TODO: toggle subscription
-
-    if (!isValidObjectId(channelId)) {
-        throw new ApiError(400, "Channel not found")
-    }
-
-    const userId = req.user._id
-
-    const isSubscribed = await Subscription.findOne({
-        subscriber: userId,
-        channel: channelId
-    })
-
-    if (isSubscribed) {
-        await Subscription.deleteOne({ subscriber: userId, channel: channelId })
-        res.status(200).json(
-            new ApiResponse({ subscribed: false }, "Subscription cancelled successfully")
-        )
-    }else{
-        const subscribtion = await Subscription.create({
+    try {
+        const { channelId } = req.params
+        console.log(channelId)
+        // TODO: toggle subscription
+    
+        if (!isValidObjectId(channelId)) {
+            throw new ApiError(400, "Channel not found")
+        }
+    
+        const userId = req.user._id
+    
+        const isSubscribed = await Subscription.findOne({
             subscriber: userId,
             channel: channelId
         })
     
-        if (!subscribtion) {
-            throw new ApiError(400, "Failed to subscribe")
+        if (isSubscribed) {
+            await Subscription.deleteOne({ subscriber: userId, channel: channelId })
+            res.status(200).json(
+                new ApiResponse({ subscribed: false }, "Subscription cancelled successfully")
+            )
+        }else{
+            const subscribtion = await Subscription.create({
+                subscriber: userId,
+                channel: channelId
+            })
+        
+            if (!subscribtion) {
+                throw new ApiError(400, "Failed to subscribe")
+            }
+            res.status(200).json(
+                new ApiResponse(200, { subscribed: true }, "Subscription toggled successfully")
+            )
         }
-        res.status(200).json(
-            new ApiResponse(200, { subscribed: true }, "Subscription toggled successfully")
-        )
+    } catch (error) {
+        throw new ApiError(400 , `Failed to toggle subscribtion due to ${error.message}`)
     }
 
     
