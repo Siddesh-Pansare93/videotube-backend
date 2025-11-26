@@ -1,0 +1,1194 @@
+{
+  "info": {
+    "_postman_id": "chai-backend-api-collection",
+    "name": "Chai Backend API Collection",
+    "description": "Complete API collection for the Chai Backend project with all endpoints including User management, Video operations, Playlists, Comments, Likes, Subscriptions, and Dashboard features.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "chai-backend-exporter"
+  },
+  "item": [
+    {
+      "name": "🧑‍💻 User Management",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.data && responseJson.data._id) {",
+                  "        pm.collectionVariables.set('userId', responseJson.data._id);",
+                  "        pm.collectionVariables.set('username', responseJson.data.username);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "{{test_username}}",
+                  "type": "text"
+                },
+                {
+                  "key": "fullName",
+                  "value": "{{test_fullName}}",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "{{test_email}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{test_password}}",
+                  "type": "text"
+                },
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "coverImage",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "register"]
+            },
+            "description": "Register a new user with avatar and cover image upload. Both images are uploaded via form-data."
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.data && responseJson.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', responseJson.data.accessToken);",
+                  "        pm.collectionVariables.set('refreshToken', responseJson.data.refreshToken);",
+                  "        pm.collectionVariables.set('userId', responseJson.data.user._id);",
+                  "        pm.collectionVariables.set('username', responseJson.data.user.username);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{test_username}}\",\n    \"email\": \"{{test_email}}\",\n    \"password\": \"{{test_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "login"]
+            },
+            "description": "Login user with username/email and password. Returns access and refresh tokens."
+          }
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "logout"]
+            },
+            "description": "Logout the currently authenticated user and clear tokens."
+          }
+        },
+        {
+          "name": "Refresh Access Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.data && responseJson.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', responseJson.data.accessToken);",
+                  "        pm.collectionVariables.set('refreshToken', responseJson.data.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/refresh-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "refresh-token"]
+            },
+            "description": "Refresh the access token using refresh token."
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/current-user",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "current-user"]
+            },
+            "description": "Get details of the currently authenticated user."
+          }
+        },
+        {
+          "name": "Update Account Details",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fullName\": \"{{updated_fullName}}\",\n    \"email\": \"{{updated_email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/update-accountdetails",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "update-accountdetails"]
+            },
+            "description": "Update user's account details like full name and email."
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"oldPassword\": \"{{test_password}}\",\n    \"newPassword\": \"{{new_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "change-password"]
+            },
+            "description": "Change user's password by providing old and new password."
+          }
+        },
+        {
+          "name": "Update Avatar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/update-avatar",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "update-avatar"]
+            },
+            "description": "Update user's avatar image via file upload."
+          }
+        },
+        {
+          "name": "Update Cover Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "coverImage",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/update-coverimage",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "update-coverimage"]
+            },
+            "description": "Update user's cover image via file upload."
+          }
+        },
+        {
+          "name": "Get Channel Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/channelprofile/{{target_username}}",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "channelprofile",
+                "{{target_username}}"
+              ]
+            },
+            "description": "Get channel profile details for a specific username including subscriber count."
+          }
+        },
+        {
+          "name": "Get Watch History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/watchhistory",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "watchhistory"]
+            },
+            "description": "Get user's watch history with video details."
+          }
+        }
+      ],
+      "description": "All user-related operations including authentication, profile management, and user details."
+    },
+    {
+      "name": "🎥 Video Management",
+      "item": [
+        {
+          "name": "Publish Video",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.data && responseJson.data._id) {",
+                  "        pm.collectionVariables.set('videoId', responseJson.data._id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "{{video_title}}",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "{{video_description}}",
+                  "type": "text"
+                },
+                {
+                  "key": "video",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "thumbnail",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/video/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "video", "create"]
+            },
+            "description": "Upload and publish a new video with thumbnail. Both video file and thumbnail are uploaded via form-data."
+          }
+        },
+        {
+          "name": "Get Video By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/video/{{videoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "video", "{{videoId}}"]
+            },
+            "description": "Get details of a specific video by its ID."
+          }
+        },
+        {
+          "name": "Update Video",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "{{updated_video_title}}",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "{{updated_video_description}}",
+                  "type": "text"
+                },
+                {
+                  "key": "thumbnail",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/video/{{videoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "video", "{{videoId}}"]
+            },
+            "description": "Update video details including title, description, and thumbnail. Only video owner can update."
+          }
+        },
+        {
+          "name": "Toggle Publish Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/video/toggle/publish/{{videoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "video", "toggle", "publish", "{{videoId}}"]
+            },
+            "description": "Toggle the publish status of a video (published/unpublished)."
+          }
+        }
+      ],
+      "description": "Video upload, management, and operations including publishing, updating, and status management."
+    },
+    {
+      "name": "📋 Playlist Management",
+      "item": [
+        {
+          "name": "Create Playlist",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.data && responseJson.data._id) {",
+                  "        pm.collectionVariables.set('playlistId', responseJson.data._id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{playlist_name}}\",\n    \"description\": \"{{playlist_description}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/playlist",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "playlist"]
+            },
+            "description": "Create a new playlist with name and description."
+          }
+        },
+        {
+          "name": "Get Playlist By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/playlist/{{playlistId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "playlist", "{{playlistId}}"]
+            },
+            "description": "Get details of a specific playlist by its ID including videos."
+          }
+        },
+        {
+          "name": "Update Playlist",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{updated_playlist_name}}\",\n    \"description\": \"{{updated_playlist_description}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/playlist/{{playlistId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "playlist", "{{playlistId}}"]
+            },
+            "description": "Update playlist name and description. Only playlist owner can update."
+          }
+        },
+        {
+          "name": "Delete Playlist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/playlist/{{playlistId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "playlist", "{{playlistId}}"]
+            },
+            "description": "Delete a playlist. Only playlist owner can delete."
+          }
+        },
+        {
+          "name": "Add Video to Playlist",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/playlist/add/{{videoId}}/{{playlistId}}",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "v1",
+                "playlist",
+                "add",
+                "{{videoId}}",
+                "{{playlistId}}"
+              ]
+            },
+            "description": "Add a video to a specific playlist."
+          }
+        },
+        {
+          "name": "Remove Video from Playlist",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/playlist/remove/{{videoId}}/{{playlistId}}",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "v1",
+                "playlist",
+                "remove",
+                "{{videoId}}",
+                "{{playlistId}}"
+              ]
+            },
+            "description": "Remove a video from a specific playlist."
+          }
+        },
+        {
+          "name": "Get User Playlists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/playlist/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "playlist", "user", "{{userId}}"]
+            },
+            "description": "Get all playlists created by a specific user."
+          }
+        }
+      ],
+      "description": "Playlist creation, management, and video operations within playlists."
+    },
+    {
+      "name": "💬 Comment Management",
+      "item": [
+        {
+          "name": "Get Video Comments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/comment/{{videoId}}?page={{comment_page}}&limit={{comment_limit}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "comment", "{{videoId}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{comment_page}}"
+                },
+                {
+                  "key": "limit",
+                  "value": "{{comment_limit}}"
+                }
+              ]
+            },
+            "description": "Get paginated comments for a specific video."
+          }
+        },
+        {
+          "name": "Add Comment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.data && responseJson.data._id) {",
+                  "        pm.collectionVariables.set('commentId', responseJson.data._id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"{{comment_content}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/comment/{{videoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "comment", "{{videoId}}"]
+            },
+            "description": "Add a new comment to a specific video."
+          }
+        },
+        {
+          "name": "Update Comment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"{{updated_comment_content}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/comment/c/{{commentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "comment", "c", "{{commentId}}"]
+            },
+            "description": "Update content of a specific comment."
+          }
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/comment/c/{{commentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "comment", "c", "{{commentId}}"]
+            },
+            "description": "Delete a specific comment."
+          }
+        }
+      ],
+      "description": "Comment system for videos including CRUD operations and pagination."
+    },
+    {
+      "name": "👍 Like Management",
+      "item": [
+        {
+          "name": "Toggle Video Like",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/like/toggle/video/{{videoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "like", "toggle", "video", "{{videoId}}"]
+            },
+            "description": "Toggle like status for a video (like/unlike)."
+          }
+        },
+        {
+          "name": "Toggle Comment Like",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/like/toggle/comment/{{commentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "v1",
+                "like",
+                "toggle",
+                "comment",
+                "{{commentId}}"
+              ]
+            },
+            "description": "Toggle like status for a comment (like/unlike)."
+          }
+        },
+        {
+          "name": "Toggle Tweet Like",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/like/toggle/tweet/{{tweetId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "like", "toggle", "tweet", "{{tweetId}}"]
+            },
+            "description": "Toggle like status for a tweet (like/unlike)."
+          }
+        },
+        {
+          "name": "Get Liked Videos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/like/videos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "like", "videos"]
+            },
+            "description": "Get all videos liked by the current user."
+          }
+        }
+      ],
+      "description": "Like/unlike functionality for videos, comments, and tweets."
+    },
+    {
+      "name": "🔔 Subscription Management",
+      "item": [
+        {
+          "name": "Toggle Subscription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subscription/c/{{channelId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "subscription", "c", "{{channelId}}"]
+            },
+            "description": "Toggle subscription to a channel (subscribe/unsubscribe)."
+          }
+        },
+        {
+          "name": "Get Channel Subscribers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subscription/c/{{channelId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "subscription", "c", "{{channelId}}"]
+            },
+            "description": "Get list of subscribers for a specific channel."
+          }
+        },
+        {
+          "name": "Get Subscribed Channels",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subscription/u/{{subscriberId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "subscription", "u", "{{subscriberId}}"]
+            },
+            "description": "Get list of channels that a user has subscribed to."
+          }
+        }
+      ],
+      "description": "Channel subscription management including subscribe/unsubscribe and getting subscription lists."
+    },
+    {
+      "name": "📊 Dashboard",
+      "item": [
+        {
+          "name": "Get Channel Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/dashboard/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "dashboard", "stats"]
+            },
+            "description": "Get channel statistics including views, subscribers, videos count, etc."
+          }
+        },
+        {
+          "name": "Get Channel Videos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/dashboard/videos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "dashboard", "videos"]
+            },
+            "description": "Get all videos from the channel for dashboard management."
+          }
+        }
+      ],
+      "description": "Dashboard analytics and channel management endpoints."
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set default values if variables are not set",
+          "if (!pm.collectionVariables.get('baseUrl')) {",
+          "    pm.collectionVariables.set('baseUrl', 'http://localhost:8000');",
+          "}",
+          "",
+          "// Set test data variables if not already set",
+          "if (!pm.collectionVariables.get('test_username')) {",
+          "    pm.collectionVariables.set('test_username', 'testuser123');",
+          "}",
+          "if (!pm.collectionVariables.get('test_email')) {",
+          "    pm.collectionVariables.set('test_email', 'test@example.com');",
+          "}",
+          "if (!pm.collectionVariables.get('test_password')) {",
+          "    pm.collectionVariables.set('test_password', 'TestPassword123');",
+          "}",
+          "if (!pm.collectionVariables.get('test_fullName')) {",
+          "    pm.collectionVariables.set('test_fullName', 'Test User Full Name');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "videoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "playlistId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "commentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "channelId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "subscriberId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tweetId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_username",
+      "value": "testuser123",
+      "type": "string"
+    },
+    {
+      "key": "test_email",
+      "value": "test@example.com",
+      "type": "string"
+    },
+    {
+      "key": "test_password",
+      "value": "TestPassword123",
+      "type": "string"
+    },
+    {
+      "key": "test_fullName",
+      "value": "Test User Full Name",
+      "type": "string"
+    },
+    {
+      "key": "updated_fullName",
+      "value": "Updated Full Name",
+      "type": "string"
+    },
+    {
+      "key": "updated_email",
+      "value": "updated@example.com",
+      "type": "string"
+    },
+    {
+      "key": "new_password",
+      "value": "NewTestPassword123",
+      "type": "string"
+    },
+    {
+      "key": "target_username",
+      "value": "targetuser",
+      "type": "string"
+    },
+    {
+      "key": "video_title",
+      "value": "Test Video Title",
+      "type": "string"
+    },
+    {
+      "key": "video_description",
+      "value": "Test video description content",
+      "type": "string"
+    },
+    {
+      "key": "updated_video_title",
+      "value": "Updated Video Title",
+      "type": "string"
+    },
+    {
+      "key": "updated_video_description",
+      "value": "Updated video description content",
+      "type": "string"
+    },
+    {
+      "key": "playlist_name",
+      "value": "Test Playlist",
+      "type": "string"
+    },
+    {
+      "key": "playlist_description",
+      "value": "Test playlist description",
+      "type": "string"
+    },
+    {
+      "key": "updated_playlist_name",
+      "value": "Updated Playlist Name",
+      "type": "string"
+    },
+    {
+      "key": "updated_playlist_description",
+      "value": "Updated playlist description",
+      "type": "string"
+    },
+    {
+      "key": "comment_content",
+      "value": "This is a test comment",
+      "type": "string"
+    },
+    {
+      "key": "updated_comment_content",
+      "value": "This is an updated comment",
+      "type": "string"
+    },
+    {
+      "key": "comment_page",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "comment_limit",
+      "value": "10",
+      "type": "string"
+    }
+  ]
+}
