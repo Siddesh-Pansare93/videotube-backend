@@ -10,14 +10,14 @@ export const verifyJWT = asyncHandler(async(req ,res , next )=>{
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
         // console.log("token is  ",token)
         if (!token) {
-            throw new ApiError(400 ,  "Unauthorized Request")
+            throw new ApiError(401 ,  "Unauthorized Request")
         }
     
         const decodedToken = jwt.verify(token , process.env.ACCESS_TOKEN_SECRET)
         // console.log("decodedToken is " , decodedToken);
 
         if (!decodedToken) {
-            throw new ApiError (400 , "Unauthorized Request")
+            throw new ApiError (401 , "Unauthorized Request")
         }
     
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
@@ -31,7 +31,14 @@ export const verifyJWT = asyncHandler(async(req ,res , next )=>{
         next()
 
     } catch (error) {
-        throw new ApiError (401 , error?.message || "Invalid Access Token")
+        return res
+        .status(401)
+        .json({
+            statusCode: 401,
+            data: null,
+            message: error?.message || "Invalid Access Token",
+            success: false
+        })
     }
 
 })
