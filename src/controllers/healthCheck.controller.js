@@ -1,26 +1,19 @@
-
-import {ApiError} from "../utils/ApiError.js"
-import {ApiResponse} from "../utils/ApiResponse.js"
-import {asyncHandler} from "../utils/asyncHandler.js"
-
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const healthcheck = asyncHandler(async (req, res) => {
-    try {
-        res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200 , 
-                null ,
-                "Everything is Working Fine"
-            )
-        )
-    } catch (error) {
-        throw new ApiError(400 , "SOMETHING WENT WRONG")
-    }
-})
+  try {
+    res
+      .status(200)
+      .json(new ApiResponse(200, null, "Everything is Working Fine"));
+  } catch (error) {
+    return res
+      .status(500)
+      .json(
+        new ApiResponse(500, null, "Health check failed - Something went wrong")
+      );
+  }
+});
 
-export {
-    healthcheck
-    }
-    
+export { healthcheck };
