@@ -1,0 +1,249 @@
+{
+	"info": {
+		"_postman_id": "video-module-collection",
+		"name": "Video Module",
+		"description": "Video management endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Videos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/video?page=1&limit=10&query=&sortBy=latest",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"video"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "query",
+							"value": ""
+						},
+						{
+							"key": "sortBy",
+							"value": "latest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish Video",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "My First Video",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "This is a description",
+							"type": "text"
+						},
+						{
+							"key": "video",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "thumbnail",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/video/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"video",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Video By ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/video/65a...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"video",
+						"65a..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Video",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Updated Title",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Updated Description",
+							"type": "text"
+						},
+						{
+							"key": "thumbnail",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/video/65a...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"video",
+						"65a..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Video",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/video/65a...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"video",
+						"65a..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Toggle Publish Status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/video/toggle/publish/65a...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"video",
+						"toggle",
+						"publish",
+						"65a..."
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		}
+	]
+}
