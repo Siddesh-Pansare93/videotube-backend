@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "dashboard-module-collection",
+		"name": "Dashboard Module",
+		"description": "Dashboard statistics and management endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Channel Stats",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/dashboard/stats",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"dashboard",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Channel Videos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/dashboard/videos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"dashboard",
+						"videos"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "tweet-module-collection",
+		"name": "Tweet Module",
+		"description": "Tweet management endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Tweet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"Hello World!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/tweet",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tweet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Tweets",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/tweet/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tweet",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Tweet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"Updated tweet content\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/tweet/65a...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tweet",
+						"65a..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Tweet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/tweet/65a...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tweet",
+						"65a..."
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		}
+	]
+}

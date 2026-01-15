@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "user-module-collection",
+		"name": "User Module",
+		"description": "User profile management endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Current User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/current-user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"current-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Account Details",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fullName\": \"John Updated\",\r\n    \"email\": \"johnupdated@example.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/update-profile",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"update-profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Avatar",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/update-avatar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"update-avatar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Cover Image",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "coverImage",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/update-coverimage",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"update-coverimage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Channel Profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/channelprofile/johndoe",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"channelprofile",
+						"johndoe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Watch History",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/watchhistory",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"watchhistory"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		}
+	]
+}

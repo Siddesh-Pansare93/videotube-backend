@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "playlist-module-collection",
+		"name": "Playlist Module",
+		"description": "Playlist management endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Playlist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"My Playlist\",\r\n    \"description\": \"Awesome videos\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/playlist",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"playlist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Playlists",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/playlist/user/65a...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"playlist",
+						"user",
+						"65a..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Playlist By ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/playlist/65b...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"playlist",
+						"65b..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Playlist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Updated Playlist Name\",\r\n    \"description\": \"Updated Description\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/playlist/65b...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"playlist",
+						"65b..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Playlist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/playlist/65b...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"playlist",
+						"65b..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Video to Playlist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/playlist/add/65a.../65b...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"playlist",
+						"add",
+						"65a...",
+						"65b..."
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Video from Playlist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/playlist/remove/65a.../65b...",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"playlist",
+						"remove",
+						"65a...",
+						"65b..."
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		}
+	]
+}

@@ -80,7 +80,7 @@ export const getVideoByIdService = async (videoId: string) => {
     if (!isValidObjectId(videoId)) {
        throw new ApiError(404, "Failed to find Video");
     }
-    const video = await Video.findById(videoId);
+    const video = await Video.findById(videoId).populate("owner", "username avatar");
     if (!video) {
         throw new ApiError(404, "Video Not Found");
     }

@@ -22,7 +22,7 @@ export const createTweetService = async (content: string, userId: string) => {
 export const getUserTweetsService = async (userId: string) => {
     const userTweets = await Tweet.find({
       owner: userId,
-    });
+    }).populate("owner", "username avatar");
 
     if (userTweets.length === 0) {
       throw new ApiError(404, "No tweets found");
