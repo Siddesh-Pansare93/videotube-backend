@@ -168,7 +168,7 @@ export const togglePublishStatusService = async (videoId: string, userId: string
     });
 
     if (!video) {
-      throw new ApiError(400, "Video Not Found");
+      throw new ApiError(404, "Video Not Found");
     }
 
     video.isPublished = !video.isPublished;

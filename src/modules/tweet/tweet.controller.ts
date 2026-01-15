@@ -16,8 +16,8 @@ const createTweet = asyncHandler(async (req: AuthenticatedRequest, res: Response
     const tweet = await createTweetService(req.body.content, req.user._id as any);
     
     res
-      .status(200)
-      .json(new ApiResponse(200, tweet, "Tweet created successfully"));
+      .status(201)
+      .json(new ApiResponse(201, tweet, "Tweet created successfully"));
 });
 
 const getUserTweets = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {

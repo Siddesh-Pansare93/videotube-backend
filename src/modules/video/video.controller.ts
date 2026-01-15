@@ -26,9 +26,9 @@ const publishAVideo = asyncHandler(async (req: AuthenticatedRequest, res: Respon
     const video = await publishVideoService(req.body, files, req.user._id as any); // Type cast for now
 
     res
-      .status(200)
+      .status(201)
       .json(
-        new ApiResponse(200, video, "Video Published Succesfully")
+        new ApiResponse(201, video, "Video Published Successfully")
       );
 });
 

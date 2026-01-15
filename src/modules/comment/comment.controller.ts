@@ -32,8 +32,8 @@ const addComment = asyncHandler(async (req: AuthenticatedRequest, res: Response)
     const comment = await addCommentService(videoId, req.body.content, req.user._id as any);
     
     res
-      .status(200)
-      .json(new ApiResponse(200, comment, "Successfullly added Comment"));
+      .status(201)
+      .json(new ApiResponse(201, comment, "Successfully added Comment"));
 });
 
 const updateComment = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {

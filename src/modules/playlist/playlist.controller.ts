@@ -18,9 +18,9 @@ const createPlaylist = asyncHandler(async (req: AuthenticatedRequest, res: Respo
     const createdPlaylist = await createPlaylistService(req.body, req.user._id as any);
     
     res
-      .status(200)
+      .status(201)
       .json(
-        new ApiResponse(200, createdPlaylist, "Playlist created Successfully")
+        new ApiResponse(201, createdPlaylist, "Playlist created Successfully")
       );
 });
 
@@ -87,7 +87,7 @@ const deletePlaylist = asyncHandler(async (req: AuthenticatedRequest, res: Respo
     res
       .status(200)
       .json(
-        new ApiResponse(200, deletedPlaylist, "SuccessFully deleted Playlist")
+        new ApiResponse(200, deletedPlaylist, "Successfully deleted Playlist")
       );
 });
 
