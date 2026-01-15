@@ -43,4 +43,8 @@ app.use("/api/v1/dashboard", dashboardRouter);
 app.use("/api/v1/tweet", tweetRouter);
 app.use("/api/v1/healthcheck", healthCheckRouter);
 
+// Global Error Handler
+import { errorHandler } from "./middlewares/error.middleware.js";
+app.use(errorHandler);
+
 export { app };
