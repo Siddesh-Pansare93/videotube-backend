@@ -2,6 +2,7 @@ import { User } from "../user/user.model.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { uploadOnCloudinary } from "../../utils/cloudinary.js";
 import { MulterFiles, RefreshTokenPayload } from "../../types/index.js";
+import { RegisterUserDto, LoginUserDto, ChangePasswordDto, UserResponseDto, LoginResponseDto } from "./auth.types.js";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 
@@ -27,7 +28,7 @@ const generateAccessAndRefreshToken = async (userId: mongoose.Types.ObjectId) =>
   }
 };
 
-export const registerUserService = async (body: any, files: MulterFiles | undefined): Promise<any> => {
+export const registerUserService = async (body: RegisterUserDto, files: MulterFiles | undefined): Promise<UserResponseDto> => {
   const { username, fullName, email, password } = body;
 
   const existedUser = await User.findOne({
@@ -76,7 +77,7 @@ export const registerUserService = async (body: any, files: MulterFiles | undefi
   return createdUser;
 };
 
-export const loginUserService = async (body: any): Promise<any> => {
+export const loginUserService = async (body: LoginUserDto): Promise<LoginResponseDto> => {
   const { username, email, password } = body;
 
   if (!(username || email)) {
@@ -105,7 +106,7 @@ export const loginUserService = async (body: any): Promise<any> => {
     "-password -refreshToken"
   );
 
-  return { loggedInUser, accessToken, refreshToken };
+  return { user: loggedInUser as unknown as UserResponseDto, accessToken, refreshToken };
 };
 
 export const logoutUserService = async (userId: mongoose.Types.ObjectId) => {
@@ -146,7 +147,7 @@ export const refreshAccessTokenService = async (incomingRefreshToken: string) =>
     return { accessToken, newRefreshToken };
 };
 
-export const changePasswordService = async (userId: mongoose.Types.ObjectId, body: any) => {
+export const changePasswordService = async (userId: mongoose.Types.ObjectId, body: ChangePasswordDto): Promise<void> => {
     const { oldPassword, newPassword } = body;
 
     const user = await User.findById(userId);

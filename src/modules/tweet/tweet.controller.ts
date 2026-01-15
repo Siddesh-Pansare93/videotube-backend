@@ -13,7 +13,7 @@ import { ApiError } from "../../utils/ApiError.js";
 const createTweet = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     if (!req.user?._id) throw new ApiError(401, "Unauthorized");
     
-    const tweet = await createTweetService(req.body.content, req.user._id as any);
+    const tweet = await createTweetService(req.body, req.user._id as any);
     
     res
       .status(201)
@@ -32,7 +32,7 @@ const getUserTweets = asyncHandler(async (req: AuthenticatedRequest, res: Respon
 
 const updateTweet = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
      const { tweetId } = req.params as { tweetId: string };
-     const updatedTweet = await updateTweetService(tweetId, req.body.content);
+     const updatedTweet = await updateTweetService(tweetId, req.body);
      
     res
       .status(200)

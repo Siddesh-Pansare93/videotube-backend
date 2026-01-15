@@ -22,7 +22,7 @@ const registerUser = asyncHandler(async (req: AuthenticatedRequest, res: Respons
 });
 
 const loginUser = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { loggedInUser, accessToken, refreshToken } = await loginUserService(req.body);
+  const { user, accessToken, refreshToken } = await loginUserService(req.body);
 
   const options = {
     httpOnly: true,
@@ -37,7 +37,7 @@ const loginUser = asyncHandler(async (req: AuthenticatedRequest, res: Response) 
       new ApiResponse(
         200,
         {
-          user: loggedInUser,
+          user,
           accessToken,
           refreshToken,
         },

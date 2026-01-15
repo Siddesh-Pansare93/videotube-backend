@@ -1,0 +1,788 @@
+{
+	"info": {
+		"_postman_id": "chai-backend-complete",
+		"name": "Chai Backend - Complete API Collection",
+		"description": "Complete API collection for Chai Backend with all endpoints, sample data, and authentication.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "fullName", "value": "John Doe", "type": "text" },
+								{ "key": "email", "value": "johndoe@example.com", "type": "text" },
+								{ "key": "username", "value": "johndoe", "type": "text" },
+								{ "key": "password", "value": "password123", "type": "text" },
+								{ "key": "avatar", "type": "file", "src": [] },
+								{ "key": "coverImage", "type": "file", "src": [] }
+							]
+						},
+						"url": { "raw": "{{baseUrl}}/users/register", "host": ["{{baseUrl}}"], "path": ["users", "register"] }
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {},
+							"status": "Created",
+							"code": 201,
+							"body": "{\n  \"statusCode\": 201,\n  \"data\": {\n    \"_id\": \"507f1f77bcf86cd799439011\",\n    \"username\": \"johndoe\",\n    \"email\": \"johndoe@example.com\",\n    \"fullName\": \"John Doe\",\n    \"avatar\": \"https://res.cloudinary.com/demo/image/upload/avatar.jpg\",\n    \"coverImage\": \"https://res.cloudinary.com/demo/image/upload/cover.jpg\",\n    \"watchHistory\": [],\n    \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n  },\n  \"message\": \"User created Successfully\",\n  \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success) {",
+									"    pm.environment.set(\"accessToken\", jsonData.data.accessToken);",
+									"    pm.environment.set(\"refreshToken\", jsonData.data.refreshToken);",
+									"    console.log(\"Tokens saved to environment\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"johndoe\",\n    \"password\": \"password123\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/users/login", "host": ["{{baseUrl}}"], "path": ["users", "login"] }
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {},
+							"status": "OK",
+							"code": 200,
+							"body": "{\n  \"statusCode\": 200,\n  \"data\": {\n    \"user\": {\n      \"_id\": \"507f1f77bcf86cd799439011\",\n      \"username\": \"johndoe\",\n      \"email\": \"johndoe@example.com\",\n      \"fullName\": \"John Doe\",\n      \"avatar\": \"https://res.cloudinary.com/demo/image/upload/avatar.jpg\",\n      \"coverImage\": \"https://res.cloudinary.com/demo/image/upload/cover.jpg\",\n      \"watchHistory\": [],\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n    },\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n  },\n  \"message\": \"User logged In Successfully\",\n  \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout User",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/users/logout", "host": ["{{baseUrl}}"], "path": ["users", "logout"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/users/refresh-token", "host": ["{{baseUrl}}"], "path": ["users", "refresh-token"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPassword\": \"password123\",\n    \"newPassword\": \"newPassword456\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/users/change-password", "host": ["{{baseUrl}}"], "path": ["users", "change-password"] }
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get Current User",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/users/current-user", "host": ["{{baseUrl}}"], "path": ["users", "current-user"] }
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {},
+							"status": "OK",
+							"code": 200,
+							"body": "{\n  \"statusCode\": 200,\n  \"data\": {\n    \"_id\": \"507f1f77bcf86cd799439011\",\n    \"username\": \"johndoe\",\n    \"email\": \"johndoe@example.com\",\n    \"fullName\": \"John Doe\",\n    \"avatar\": \"https://res.cloudinary.com/demo/image/upload/avatar.jpg\",\n    \"coverImage\": \"https://res.cloudinary.com/demo/image/upload/cover.jpg\",\n    \"watchHistory\": [],\n    \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n  },\n  \"message\": \"Current user fetched Successfully\",\n  \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Account Details",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"John Updated\",\n    \"email\": \"johnupdated@example.com\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/users/update-profile", "host": ["{{baseUrl}}"], "path": ["users", "update-profile"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update Avatar",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "avatar", "type": "file", "src": [] }
+							]
+						},
+						"url": { "raw": "{{baseUrl}}/users/update-avatar", "host": ["{{baseUrl}}"], "path": ["users", "update-avatar"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cover Image",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "coverImage", "type": "file", "src": [] }
+							]
+						},
+						"url": { "raw": "{{baseUrl}}/users/update-coverimage", "host": ["{{baseUrl}}"], "path": ["users", "update-coverimage"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Get Channel Profile",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/users/channelprofile/johndoe", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["users", "channelprofile", "johndoe"]
+						}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {},
+							"status": "OK",
+							"code": 200,
+							"body": "{\n  \"statusCode\": 200,\n  \"data\": {\n    \"_id\": \"507f1f77bcf86cd799439011\",\n    \"username\": \"johndoe\",\n    \"fullName\": \"John Doe\",\n    \"avatar\": \"https://res.cloudinary.com/demo/image/upload/avatar.jpg\",\n    \"coverImage\": \"https://res.cloudinary.com/demo/image/upload/cover.jpg\",\n    \"subscriberCount\": 150,\n    \"channelsubscribedToCount\": 25,\n    \"isSubscribed\": false\n  },\n  \"message\": \"User channel fetched Successfully\",\n  \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Watch History",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/users/watchhistory", "host": ["{{baseUrl}}"], "path": ["users", "watchhistory"] }
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Video",
+			"item": [
+				{
+					"name": "Get All Videos",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/video?page=1&limit=10&query=&sortBy=latest", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["video"],
+							"query": [
+								{ "key": "page", "value": "1" },
+								{ "key": "limit", "value": "10" },
+								{ "key": "query", "value": "" },
+								{ "key": "sortBy", "value": "latest" }
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {},
+							"status": "OK",
+							"code": 200,
+							"body": "{\n  \"statusCode\": 200,\n  \"data\": {\n    \"videos\": [\n      {\n        \"_id\": \"507f1f77bcf86cd799439012\",\n        \"videoFile\": \"https://res.cloudinary.com/demo/video/upload/sample.mp4\",\n        \"thumbnail\": \"https://res.cloudinary.com/demo/image/upload/thumb.jpg\",\n        \"title\": \"My First Video\",\n        \"description\": \"This is a sample video description\",\n        \"duration\": 125.5,\n        \"views\": 1500,\n        \"isPublished\": true,\n        \"owner\": {\n          \"_id\": \"507f1f77bcf86cd799439011\",\n          \"username\": \"johndoe\",\n          \"avatar\": \"https://res.cloudinary.com/demo/image/upload/avatar.jpg\"\n        },\n        \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n        \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n      }\n    ],\n    \"page\": 1,\n    \"limit\": 10,\n    \"totalPages\": 5,\n    \"totalVideos\": 50\n  },\n  \"message\": \"Successfully fetched all videos\",\n  \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Publish Video",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "title", "value": "My Awesome Video", "type": "text" },
+								{ "key": "description", "value": "This is a detailed description of my awesome video.", "type": "text" },
+								{ "key": "video", "type": "file", "src": [] },
+								{ "key": "thumbnail", "type": "file", "src": [] }
+							]
+						},
+						"url": { "raw": "{{baseUrl}}/video/create", "host": ["{{baseUrl}}"], "path": ["video", "create"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Get Video By ID",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/video/:videoId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["video", ":videoId"],
+							"variable": [{ "key": "videoId", "value": "507f1f77bcf86cd799439012" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Video",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "title", "value": "Updated Video Title", "type": "text" },
+								{ "key": "description", "value": "Updated video description.", "type": "text" },
+								{ "key": "thumbnail", "type": "file", "src": [] }
+							]
+						},
+						"url": { 
+							"raw": "{{baseUrl}}/video/:videoId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["video", ":videoId"],
+							"variable": [{ "key": "videoId", "value": "507f1f77bcf86cd799439012" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Video",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "DELETE",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/video/:videoId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["video", ":videoId"],
+							"variable": [{ "key": "videoId", "value": "507f1f77bcf86cd799439012" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Toggle Publish Status",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "PATCH",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/video/toggle/publish/:videoId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["video", "toggle", "publish", ":videoId"],
+							"variable": [{ "key": "videoId", "value": "507f1f77bcf86cd799439012" }]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscription",
+			"item": [
+				{
+					"name": "Toggle Subscription",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/subscription/c/:channelId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["subscription", "c", ":channelId"],
+							"variable": [{ "key": "channelId", "value": "507f1f77bcf86cd799439011" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Channel Subscribers",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/subscription/c/:channelId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["subscription", "c", ":channelId"],
+							"variable": [{ "key": "channelId", "value": "507f1f77bcf86cd799439011" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Subscribed Channels",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/subscription/u/:subscriberId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["subscription", "u", ":subscriberId"],
+							"variable": [{ "key": "subscriberId", "value": "507f1f77bcf86cd799439011" }]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Playlist",
+			"item": [
+				{
+					"name": "Create Playlist",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"My Favorite Videos\",\n    \"description\": \"A collection of my favorite videos\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/playlist", "host": ["{{baseUrl}}"], "path": ["playlist"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Playlists",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/playlist/user/:userId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["playlist", "user", ":userId"],
+							"variable": [{ "key": "userId", "value": "507f1f77bcf86cd799439011" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Playlist By ID",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/playlist/:playlistId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["playlist", ":playlistId"],
+							"variable": [{ "key": "playlistId", "value": "507f1f77bcf86cd799439013" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Playlist",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Playlist Name\",\n    \"description\": \"Updated playlist description\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { 
+							"raw": "{{baseUrl}}/playlist/:playlistId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["playlist", ":playlistId"],
+							"variable": [{ "key": "playlistId", "value": "507f1f77bcf86cd799439013" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Playlist",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "DELETE",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/playlist/:playlistId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["playlist", ":playlistId"],
+							"variable": [{ "key": "playlistId", "value": "507f1f77bcf86cd799439013" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Video to Playlist",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "PATCH",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/playlist/add/:videoId/:playlistId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["playlist", "add", ":videoId", ":playlistId"],
+							"variable": [
+								{ "key": "videoId", "value": "507f1f77bcf86cd799439012" },
+								{ "key": "playlistId", "value": "507f1f77bcf86cd799439013" }
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Video from Playlist",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "PATCH",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/playlist/remove/:videoId/:playlistId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["playlist", "remove", ":videoId", ":playlistId"],
+							"variable": [
+								{ "key": "videoId", "value": "507f1f77bcf86cd799439012" },
+								{ "key": "playlistId", "value": "507f1f77bcf86cd799439013" }
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Get Video Comments",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/comment/:videoId?page=1&limit=10", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["comment", ":videoId"],
+							"query": [
+								{ "key": "page", "value": "1" },
+								{ "key": "limit", "value": "10" }
+							],
+							"variable": [{ "key": "videoId", "value": "507f1f77bcf86cd799439012" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Great video! Very informative.\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { 
+							"raw": "{{baseUrl}}/comment/:videoId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["comment", ":videoId"],
+							"variable": [{ "key": "videoId", "value": "507f1f77bcf86cd799439012" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Comment",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Updated comment content.\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { 
+							"raw": "{{baseUrl}}/comment/c/:commentId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["comment", "c", ":commentId"],
+							"variable": [{ "key": "commentId", "value": "507f1f77bcf86cd799439014" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "DELETE",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/comment/c/:commentId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["comment", "c", ":commentId"],
+							"variable": [{ "key": "commentId", "value": "507f1f77bcf86cd799439014" }]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Like",
+			"item": [
+				{
+					"name": "Toggle Video Like",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/like/toggle/video/:videoId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["like", "toggle", "video", ":videoId"],
+							"variable": [{ "key": "videoId", "value": "507f1f77bcf86cd799439012" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Toggle Comment Like",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/like/toggle/comment/:commentId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["like", "toggle", "comment", ":commentId"],
+							"variable": [{ "key": "commentId", "value": "507f1f77bcf86cd799439014" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Toggle Tweet Like",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/like/toggle/tweet/:tweetId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["like", "toggle", "tweet", ":tweetId"],
+							"variable": [{ "key": "tweetId", "value": "507f1f77bcf86cd799439015" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Liked Videos",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/like/videos", "host": ["{{baseUrl}}"], "path": ["like", "videos"] }
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tweet",
+			"item": [
+				{
+					"name": "Create Tweet",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Hello everyone! This is my first tweet. 🚀\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/tweet", "host": ["{{baseUrl}}"], "path": ["tweet"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Tweets",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/tweet/user", "host": ["{{baseUrl}}"], "path": ["tweet", "user"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tweet",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Updated tweet content! 📝\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { 
+							"raw": "{{baseUrl}}/tweet/:tweetId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["tweet", ":tweetId"],
+							"variable": [{ "key": "tweetId", "value": "507f1f77bcf86cd799439015" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tweet",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "DELETE",
+						"header": [],
+						"url": { 
+							"raw": "{{baseUrl}}/tweet/:tweetId", 
+							"host": ["{{baseUrl}}"], 
+							"path": ["tweet", ":tweetId"],
+							"variable": [{ "key": "tweetId", "value": "507f1f77bcf86cd799439015" }]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Get Channel Stats",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/dashboard/stats", "host": ["{{baseUrl}}"], "path": ["dashboard", "stats"] }
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {},
+							"status": "OK",
+							"code": 200,
+							"body": "{\n  \"statusCode\": 200,\n  \"data\": {\n    \"totalViews\": 15000,\n    \"totalSubscribers\": 250,\n    \"totalVideos\": 45,\n    \"totalLikes\": 3500\n  },\n  \"message\": \"User channel stats fetched Successfully\",\n  \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Channel Videos",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/dashboard/videos", "host": ["{{baseUrl}}"], "path": ["dashboard", "videos"] }
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HealthCheck",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/healthcheck", "host": ["{{baseUrl}}"], "path": ["healthcheck"] }
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {},
+							"status": "OK",
+							"code": 200,
+							"body": "{\n  \"statusCode\": 200,\n  \"data\": \"OK\",\n  \"message\": \"Health Check Passed\",\n  \"success\": true\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		}
+	]
+}

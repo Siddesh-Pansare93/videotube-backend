@@ -8,18 +8,41 @@
 - **Method**: `GET`
 - **URL**: `/`
 - **Headers**:
-    - `Authorization`: `Bearer <accessToken>`
+    | Header | Value |
+    |--------|-------|
+    | `Authorization` | `Bearer <accessToken>` |
 - **Query Params**:
-    - `page` (number, default: 1)
-    - `limit` (number, default: 10)
-    - `query` (string, search term)
-    - `sortBy` (string: `latest`, `oldest`, `views`)
+    | Param | Type | Default | Description |
+    |-------|------|---------|-------------|
+    | `page` | number | 1 | Page number |
+    | `limit` | number | 10 | Items per page |
+    | `query` | string | - | Search term for title/description |
+    | `sortBy` | string | latest | Sort order: `latest`, `oldest`, `views` |
+
 - **Response**: `200 OK`
     ```json
     {
       "statusCode": 200,
       "data": {
-        "videos": [ ... ],
+        "videos": [
+          {
+            "_id": "507f1f77bcf86cd799439012",
+            "videoFile": "https://res.cloudinary.com/demo/video/upload/sample.mp4",
+            "thumbnail": "https://res.cloudinary.com/demo/image/upload/thumb.jpg",
+            "title": "My First Video",
+            "description": "This is a sample video description",
+            "duration": 125.5,
+            "views": 1500,
+            "isPublished": true,
+            "owner": {
+              "_id": "507f1f77bcf86cd799439011",
+              "username": "johndoe",
+              "avatar": "https://res.cloudinary.com/demo/image/upload/avatar.jpg"
+            },
+            "createdAt": "2024-01-15T10:30:00.000Z",
+            "updatedAt": "2024-01-15T10:30:00.000Z"
+          }
+        ],
         "page": 1,
         "limit": 10,
         "totalPages": 5,
@@ -34,27 +57,34 @@
 - **Method**: `POST`
 - **URL**: `/create`
 - **Headers**:
-    - `Authorization`: `Bearer <accessToken>`
+    | Header | Value |
+    |--------|-------|
+    | `Authorization` | `Bearer <accessToken>` |
 - **Content-Type**: `multipart/form-data`
 - **Body**:
-    - `title` (text, required)
-    - `description` (text, required)
-    - `video` (file, required)
-    - `thumbnail` (file, required)
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `title` | text | Yes | Video title |
+    | `description` | text | Yes | Video description |
+    | `video` | file | Yes | Video file |
+    | `thumbnail` | file | Yes | Thumbnail image |
+
 - **Response**: `201 Created`
     ```json
     {
       "statusCode": 201,
       "data": {
-        "_id": "...",
-        "videoFile": "http://...",
-        "thumbnail": "http://...",
-        "title": "Example Video",
-        "description": "...",
-        "duration": 120,
+        "_id": "507f1f77bcf86cd799439012",
+        "videoFile": "https://res.cloudinary.com/demo/video/upload/sample.mp4",
+        "thumbnail": "https://res.cloudinary.com/demo/image/upload/thumb.jpg",
+        "title": "My Awesome Video",
+        "description": "This is a detailed description of my awesome video.",
+        "duration": 180.25,
         "views": 0,
         "isPublished": true,
-        "owner": "..."
+        "owner": "507f1f77bcf86cd799439011",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
       },
       "message": "Video Published Successfully",
       "success": true
@@ -65,14 +95,35 @@
 - **Method**: `GET`
 - **URL**: `/:videoId`
 - **Headers**:
-    - `Authorization`: `Bearer <accessToken>`
+    | Header | Value |
+    |--------|-------|
+    | `Authorization` | `Bearer <accessToken>` |
 - **Params**:
-    - `videoId` (string)
+    | Param | Type | Description |
+    |-------|------|-------------|
+    | `videoId` | string | MongoDB ObjectId of the video |
+
 - **Response**: `200 OK`
     ```json
     {
       "statusCode": 200,
-      "data": { ...videoObject },
+      "data": {
+        "_id": "507f1f77bcf86cd799439012",
+        "videoFile": "https://res.cloudinary.com/demo/video/upload/sample.mp4",
+        "thumbnail": "https://res.cloudinary.com/demo/image/upload/thumb.jpg",
+        "title": "My First Video",
+        "description": "This is a sample video description",
+        "duration": 125.5,
+        "views": 1500,
+        "isPublished": true,
+        "owner": {
+          "_id": "507f1f77bcf86cd799439011",
+          "username": "johndoe",
+          "avatar": "https://res.cloudinary.com/demo/image/upload/avatar.jpg"
+        },
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      },
       "message": "Video Found Successfully",
       "success": true
     }
@@ -82,19 +133,38 @@
 - **Method**: `PATCH`
 - **URL**: `/:videoId`
 - **Headers**:
-    - `Authorization`: `Bearer <accessToken>`
+    | Header | Value |
+    |--------|-------|
+    | `Authorization` | `Bearer <accessToken>` |
 - **Content-Type**: `multipart/form-data`
-- **Body**:
-    - `title` (text, required)
-    - `description` (text, required)
-    - `thumbnail` (file, required)
 - **Params**:
-    - `videoId` (string)
+    | Param | Type | Description |
+    |-------|------|-------------|
+    | `videoId` | string | MongoDB ObjectId of the video |
+- **Body**:
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `title` | text | Yes | Updated title |
+    | `description` | text | Yes | Updated description |
+    | `thumbnail` | file | Yes | New thumbnail image |
+
 - **Response**: `200 OK`
     ```json
     {
       "statusCode": 200,
-      "data": { ...videoObject },
+      "data": {
+        "_id": "507f1f77bcf86cd799439012",
+        "videoFile": "https://res.cloudinary.com/demo/video/upload/sample.mp4",
+        "thumbnail": "https://res.cloudinary.com/demo/image/upload/new_thumb.jpg",
+        "title": "Updated Video Title",
+        "description": "Updated video description.",
+        "duration": 125.5,
+        "views": 1500,
+        "isPublished": true,
+        "owner": "507f1f77bcf86cd799439011",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T12:00:00.000Z"
+      },
       "message": "Video Details Updated Successfully",
       "success": true
     }
@@ -104,9 +174,14 @@
 - **Method**: `DELETE`
 - **URL**: `/:videoId`
 - **Headers**:
-    - `Authorization`: `Bearer <accessToken>`
+    | Header | Value |
+    |--------|-------|
+    | `Authorization` | `Bearer <accessToken>` |
 - **Params**:
-    - `videoId` (string)
+    | Param | Type | Description |
+    |-------|------|-------------|
+    | `videoId` | string | MongoDB ObjectId of the video |
+
 - **Response**: `200 OK`
     ```json
     {
@@ -121,15 +196,41 @@
 - **Method**: `PATCH`
 - **URL**: `/toggle/publish/:videoId`
 - **Headers**:
-    - `Authorization`: `Bearer <accessToken>`
+    | Header | Value |
+    |--------|-------|
+    | `Authorization` | `Bearer <accessToken>` |
 - **Params**:
-    - `videoId` (string)
+    | Param | Type | Description |
+    |-------|------|-------------|
+    | `videoId` | string | MongoDB ObjectId of the video |
+
 - **Response**: `200 OK`
     ```json
     {
       "statusCode": 200,
-      "data": { ...videoObject, "isPublished": false },
+      "data": {
+        "_id": "507f1f77bcf86cd799439012",
+        "videoFile": "https://res.cloudinary.com/demo/video/upload/sample.mp4",
+        "thumbnail": "https://res.cloudinary.com/demo/image/upload/thumb.jpg",
+        "title": "My First Video",
+        "description": "This is a sample video description",
+        "duration": 125.5,
+        "views": 1500,
+        "isPublished": false,
+        "owner": "507f1f77bcf86cd799439011",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T12:00:00.000Z"
+      },
       "message": "Toggled Publish status successfully",
       "success": true
     }
     ```
+
+## Error Responses
+
+| Status Code | Message | Description |
+|-------------|---------|-------------|
+| 400 | Bad Request | Missing required fields |
+| 403 | Forbidden | Not authorized to modify this video |
+| 404 | Not Found | Video not found |
+| 500 | Internal Server Error | Server error |

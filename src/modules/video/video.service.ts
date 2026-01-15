@@ -2,9 +2,10 @@ import { Video } from "./video.model.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { uploadOnCloudinary, deleteFromCloudinary } from "../../utils/cloudinary.js";
 import { MulterFiles } from "../../types/index.js";
+import { PublishVideoDto, UpdateVideoDto, GetAllVideosQueryDto, GetAllVideosResponseDto } from "./video.types.js";
 import mongoose, { isValidObjectId } from "mongoose";
 
-export const getAllVideosService = async (queryDetails: any) => {
+export const getAllVideosService = async (queryDetails: GetAllVideosQueryDto): Promise<GetAllVideosResponseDto> => {
     const { page = 1, limit = 10, query, sortBy } = queryDetails;
     const filter: Record<string, unknown> = { isPublished: true };
 
@@ -35,7 +36,7 @@ export const getAllVideosService = async (queryDetails: any) => {
     );
 
     return {
-      videos,
+      videos: videos as unknown as GetAllVideosResponseDto["videos"],
       page: Number(page),
       limit: Number(limit),
       totalPages: Math.ceil(total / Number(limit)),
@@ -43,7 +44,7 @@ export const getAllVideosService = async (queryDetails: any) => {
     };
 };
 
-export const publishVideoService = async (body: any, files: MulterFiles | undefined, userId: string) => {
+export const publishVideoService = async (body: PublishVideoDto, files: MulterFiles | undefined, userId: string) => {
     const { title, description } = body;
     const videoLocalPath = files?.video?.[0]?.path;
 
@@ -87,7 +88,7 @@ export const getVideoByIdService = async (videoId: string) => {
     return video;
 }
 
-export const updateVideoService = async (videoId: string, body: any, file: Express.Multer.File | undefined, userId: string) => {
+export const updateVideoService = async (videoId: string, body: UpdateVideoDto, file: Express.Multer.File | undefined, userId: string) => {
     if (!isValidObjectId(videoId)) {
       throw new ApiError(404, "Failed Update : Can't find video with that id");
     }

@@ -1,9 +1,10 @@
 import mongoose, { isValidObjectId } from "mongoose";
 import { Playlist } from "./playlist.model.js";
 import { ApiError } from "../../utils/ApiError.js";
+import { CreatePlaylistDto, UpdatePlaylistDto } from "./playlist.types.js";
 
-export const createPlaylistService = async (body: any, userId: string) => {
-    const { name, description } = body;
+export const createPlaylistService = async (dto: CreatePlaylistDto, userId: string) => {
+    const { name, description } = dto;
     
     if (!name || !description) {
       throw new ApiError(400, "Name and description of the playlist is required");
@@ -213,8 +214,8 @@ export const deletePlaylistService = async (playlistId: string, userId: string) 
     return deletedPlaylist;
 };
 
-export const updatePlaylistService = async (playlistId: string, body: any, userId: string) => {
-    const { name, description } = body;
+export const updatePlaylistService = async (playlistId: string, dto: UpdatePlaylistDto, userId: string) => {
+    const { name, description } = dto;
     
     if (!name || !description) {
          throw new ApiError(400, "All Feilds are required");

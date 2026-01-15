@@ -1,8 +1,10 @@
 import { isValidObjectId } from "mongoose";
 import { Tweet } from "./tweet.model.js";
 import { ApiError } from "../../utils/ApiError.js";
+import { CreateTweetDto, UpdateTweetDto } from "./tweet.types.js";
 
-export const createTweetService = async (content: string, userId: string) => {
+export const createTweetService = async (dto: CreateTweetDto, userId: string) => {
+    const { content } = dto;
     if (!content || content.trim() == "") {
       throw new ApiError(400, "Please fill in all fields");
     }
@@ -31,7 +33,8 @@ export const getUserTweetsService = async (userId: string) => {
     return userTweets;
 };
 
-export const updateTweetService = async (tweetId: string, content: string) => {
+export const updateTweetService = async (tweetId: string, dto: UpdateTweetDto) => {
+    const { content } = dto;
     if (!content || content.trim() == "") {
       throw new ApiError(400, "Content is required");
     }
