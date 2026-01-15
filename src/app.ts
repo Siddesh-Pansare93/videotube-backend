@@ -19,18 +19,20 @@ app.use(cookieParser());
 
 // import router
 
-import userRouter from "./routes/user.routes.js";
-import subscriptionRouter from "./routes/subscription.routes.js";
-import playlistRouter from "./routes/playlist.routes.js";
-import videoRouter from "./routes/video.routes.js";
-import likeRouter from "./routes/like.routes.js";
-import commentRouter from "./routes/comment.routes.js";
-import dashboardRouter from "./routes/dashboard.routes.js";
-import tweetRouter from "./routes/tweet.routes.js";
-import healthCheckRouter from "./routes/healthCheck.routes.js";
+import authRouter from "./modules/auth/auth.routes.js";
+import userRouter from "./modules/user/user.routes.js";
+import subscriptionRouter from "./modules/subscription/subscription.routes.js";
+import playlistRouter from "./modules/playlist/playlist.routes.js";
+import videoRouter from "./modules/video/video.routes.js";
+import likeRouter from "./modules/like/like.routes.js";
+import commentRouter from "./modules/comment/comment.routes.js";
+import dashboardRouter from "./modules/dashboard/dashboard.routes.js";
+import tweetRouter from "./modules/tweet/tweet.routes.js";
+import healthCheckRouter from "./modules/healthcheck/healthcheck.routes.js";
 
 //declare routes
 
+app.use("/api/v1/users", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subscription", subscriptionRouter);
 app.use("/api/v1/playlist", playlistRouter);
